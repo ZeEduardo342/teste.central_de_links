@@ -1,48 +1,4 @@
 // ============================================================
-// Firebase Imports
-// ============================================================
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import {
-    getAuth,
-    createUserWithEmailAndPassword,
-    signInWithEmailAndPassword,
-    signOut,
-    onAuthStateChanged,
-    updateProfile
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import {
-    getFirestore,
-    collection,
-    addDoc,
-    getDocs,
-    getDoc,
-    doc,
-    updateDoc,
-    deleteDoc,
-    query,
-    orderBy,
-    where,
-    setDoc,
-    serverTimestamp
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-// ============================================================
-// Firebase Configuration  ← coloque sua chave aqui
-// ============================================================
-const firebaseConfig = {
-    apiKey: "api-key",
-    authDomain: "central-de-links-cmp.firebaseapp.com",
-    projectId: "central-de-links-cmp",
-    storageBucket: "central-de-links-cmp.firebasestorage.app",
-    messagingSenderId: "502211758516",
-    appId: "1:502211758516:web:541ae82f18ad98178c8ae1"
-};
-
-const app  = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db   = getFirestore(app);
-
-// ============================================================
 // Utilities
 // ============================================================
 function convertFigmaUrlToApp(v) {
