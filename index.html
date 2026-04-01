@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Central de Links</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="icon" type="image/svg" href="Icon.svg">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <button id="sidebarToggle" class="sidebar-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <img src="PNG_Logo_CMP.png" class="logo">
+        </div>
+        <div class="header-center">
+            <div class="search-container">
+                <input type="text" id="searchInput" placeholder="Buscar links..." class="search-input">
+                <i class="fas fa-search search-icon"></i>
+            </div>
+            <select id="categoryFilter" class="category-filter">
+                <option value="all">Todas as Categorias</option>
+            </select>
+            <div class="card-size-controls">
+                <button id="sizeSmall" class="size-btn" title="Pequeno">
+                    <i class="fas fa-compress"></i>
+                </button>
+                <button id="sizeMedium" class="size-btn active" title="Médio">
+                    <i class="fas fa-square"></i>
+                </button>
+                <button id="sizeLarge" class="size-btn" title="Grande">
+                    <i class="fas fa-expand"></i>
+                </button>
+            </div>
+        </div>
+        <div class="header-right">
+            <button id="themeToggle" class="theme-toggle">
+                <i class="fas fa-moon"></i>
+            </button>
+            <button id="adminToggle" class="admin-toggle" style="display: none;">
+                <i class="fas fa-user-cog"></i>
+            </button>
+            <div class="user-menu">
+                <button id="userMenuBtn" class="user-menu-btn">
+                    <i class="fas fa-user-circle"></i>
+                </button>
+                <div id="userDropdown" class="user-dropdown" style="display: none;">
+                    <div class="user-info">
+                        <p id="userDisplayName">Usuário</p>
+                        <small id="userEmail">email@example.com</small>
+                    </div>
+                    <hr>
+                    <button id="adminPanelBtn" class="dropdown-item" style="display: none;">
+                        <i class="fas fa-cog"></i> Painel Admin
+                    </button>
+                    <button id="settingsBtn" class="dropdown-item">
+                        <i class="fas fa-sliders-h"></i> Configurações
+                    </button>
+                    <hr>
+                    <button id="logoutBtn" class="dropdown-item">
+                        <i class="fas fa-sign-out-alt"></i> Sair
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="sidebar">
+        <div class="sidebar-header">
+            <h3>Categorias</h3>
+        </div>
+        <nav class="sidebar-nav">
+            <ul id="categoriesList" class="categories-list">
+                <!-- Categorias serão carregadas dinamicamente -->
+            </ul>
+        </nav>
+        <div class="sidebar-footer" id="adminSidebarFooter" style="display: none;">
+            <button id="addCategoryBtn" class="btn btn-secondary">
+                <i class="fas fa-plus"></i> Nova Categoria
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Links Pessoais Section -->
+        <section id="personalLinksSection" class="links-section">
+            <div class="section-header">
+                <h2><i class="fas fa-lock"></i> Meus Links Pessoais</h2>
+                <button id="addPersonalLinkBtn" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Adicionar Link Pessoal
+                </button>
+            </div>
+            <div id="personalLinksList" class="links-grid">
+                <!-- Links pessoais serão carregados dinamicamente -->
+            </div>
+            <div id="personalEmptyState" class="empty-state" style="display: none;">
+                <i class="fas fa-inbox"></i>
+                <h3>Nenhum link pessoal</h3>
+                <p>Crie seus primeiros links pessoais para organizá-los.</p>
+            </div>
+        </section>
+
+        <!-- Favoritos Section -->
+        <section id="favoritesSection" class="favorites-section">
+            <h2><i class="fas fa-star"></i> Favoritos</h2>
+            <div id="favoritesList" class="links-grid">
+                <!-- Links favoritos serão carregados dinamicamente -->
+            </div>
+        </section>
+
+        <!-- Links Públicos Section -->
+        <section class="links-section">
+            <div class="section-header">
+                <h2 id="currentCategoryTitle">Links Públicos</h2>
+                <button id="addPublicLinkBtn" class="btn btn-primary" style="display: none;">
+                    <i class="fas fa-plus"></i> Adicionar Link Público
+                </button>
+            </div>
+            <div id="linksList" class="links-grid">
+                <!-- Links públicos serão carregados dinamicamente -->
+            </div>
+        </section>
+
+        <!-- Empty State -->
+        <div id="emptyState" class="empty-state" style="display: none;">
+            <i class="fas fa-link"></i>
+            <h3>Nenhum link encontrado</h3>
+            <p>Adicione alguns links para começar ou ajuste sua busca.</p>
+        </div>
+    </main>
+
+    <!-- Link Modal (Add/Edit) -->
+    <div id="linkModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="linkModalTitle">Adicionar Link</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="linkForm">
+                    <div class="form-group">
+                        <label for="linkTitle">Título:</label>
+                        <input type="text" id="linkTitle" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="linkUrl">URL:</label>
+                        <input type="url" id="linkUrl" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="linkCategory">Categoria:</label>
+                        <select id="linkCategory" required>
+                            <!-- Opções serão carregadas dinamicamente -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="linkType">Tipo:</label>
+                        <select id="linkType" required>
+                            <option value="private">Pessoal (Privado)</option>
+                            <option value="public">Público</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="linkTags">Tags (separadas por vírgula):</label>
+                        <input type="text" id="linkTags" placeholder="design, urgente, interno">
+                    </div>
+                    <div class="form-group">
+                        <label for="linkDescription">Descrição:</label>
+                        <textarea id="linkDescription" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="linkFavorite">
+                            <span class="checkmark"></span>
+                            Marcar como favorito
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="linkActive" checked>
+                            <span class="checkmark"></span>
+                            Link ativo (clicável)
+                        </label>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" id="cancelLinkBtn">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Salvar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Link Details Modal -->
+    <div id="linkDetailsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="linkDetailsTitle">Detalhes do Link</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="linkDetailsContent">
+                    <!-- Conteúdo será preenchido dinamicamente -->
+                </div>
+                <div class="form-actions" id="linkDetailsActions" style="display: none;">
+                    <button type="button" class="btn btn-secondary" id="copyLinkBtn">
+                        <i class="fas fa-copy"></i> Copiar Link
+                    </button>
+                    <button type="button" class="btn btn-secondary" id="editLinkBtn" style="display: none;">
+                        <i class="fas fa-edit"></i> Editar
+                    </button>
+                    <button type="button" class="btn btn-danger" id="deleteLinkBtn" style="display: none;">
+                        <i class="fas fa-trash"></i> Excluir
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Category Modal -->
+    <div id="categoryModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Nova Categoria</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="categoryForm">
+                    <div class="form-group">
+                        <label for="categoryName">Nome da Categoria:</label>
+                        <input type="text" id="categoryName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="categoryIcon">Ícone (Font Awesome):</label>
+                        <input type="text" id="categoryIcon" placeholder="fas fa-folder" value="fas fa-folder">
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" id="cancelCategoryBtn">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Criar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Confirmação</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="confirmMessage">Tem certeza que deseja realizar esta ação?</p>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelConfirmBtn">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirmActionBtn">Confirmar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Carregando...</p>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toastContainer" class="toast-container">
+        <!-- Notificações serão adicionadas dinamicamente -->
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module" src="assets/js/app.js"></script>
+</body>
+</html>

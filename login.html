@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Central de Links - Login</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="icon" type="image/svg" href="Icon.svg">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <img src="PNG_Logo_CMP.png" class="auth-logo">
+                <h1>Central de Links</h1>
+            </div>
+
+            <!-- Login Form -->
+            <form id="loginForm" class="auth-form" style="display: block;">
+                <h2>Entrar</h2>
+                
+                <div class="form-group">
+                    <label for="loginEmail">Email:</label>
+                    <input type="email" id="loginEmail" required placeholder="seu@email.com">
+                </div>
+                
+                <div class="form-group">
+                    <label for="loginPassword">Senha:</label>
+                    <input type="password" id="loginPassword" required placeholder="Sua senha">
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-full">Entrar</button>
+                
+                <div class="auth-divider">ou</div>
+                
+                <button type="button" class="btn btn-secondary btn-full" id="switchToRegister">
+                    Criar nova conta
+                </button>
+            </form>
+
+            <!-- Register Form -->
+            <form id="registerForm" class="auth-form" style="display: none;">
+                <h2>Criar Conta</h2>
+                
+                <div class="form-group">
+                    <label for="registerName">Nome:</label>
+                    <input type="text" id="registerName" required placeholder="Seu nome">
+                </div>
+                
+                <div class="form-group">
+                    <label for="registerEmail">Email:</label>
+                    <input type="email" id="registerEmail" required placeholder="seu@email.com">
+                </div>
+                
+                <div class="form-group">
+                    <label for="registerPassword">Senha:</label>
+                    <input type="password" id="registerPassword" required placeholder="Mínimo 6 caracteres">
+                </div>
+                
+                <div class="form-group">
+                    <label for="registerPasswordConfirm">Confirmar Senha:</label>
+                    <input type="password" id="registerPasswordConfirm" required placeholder="Confirme sua senha">
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-full">Criar Conta</button>
+                
+                <div class="auth-divider">ou</div>
+                
+                <button type="button" class="btn btn-secondary btn-full" id="switchToLogin">
+                    Já tenho conta
+                </button>
+            </form>
+
+            <div id="authError" class="auth-error" style="display: none;"></div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Carregando...</p>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module" src="assets/js/login-script.js"></script>
+</body>
+</html>
