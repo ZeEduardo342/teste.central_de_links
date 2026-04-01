@@ -1,0 +1,40 @@
+// Firebase Configuration and Imports
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { 
+    getFirestore, 
+    collection, 
+    addDoc, 
+    getDocs, 
+    doc, 
+    updateDoc, 
+    deleteDoc, 
+    query, 
+    orderBy,
+    where,
+    onSnapshot 
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import {
+    getAuth,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    signOut,
+    onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+// Firebase Configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyATPxgEAjC2EcRmpAnzHRB7bUpeG2pY-pU",
+  authDomain: "central-de-links-cmp.firebaseapp.com",
+  projectId: "central-de-links-cmp",
+  storageBucket: "central-de-links-cmp.firebasestorage.app",
+  messagingSenderId: "502211758516",
+  appId: "1:502211758516:web:541ae82f18ad98178c8ae1"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+// Export all Firebase services
+export { app, db, auth, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, orderBy, where, onSnapshot, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged };
