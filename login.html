@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Central de Links — Entrar</title>
+    <link rel="stylesheet" href="auth.css">
+    <link rel="icon" type="image/svg" href="Icon.svg">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="auth-bg">
+        <div class="auth-particles" id="particles"></div>
+    </div>
+
+    <div class="auth-container">
+        <div class="auth-card">
+            <!-- Logo -->
+            <div class="auth-logo">
+                <img src="PNG_Logo_CMP.png" alt="Logo CMP" class="auth-logo-img" onerror="this.style.display='none'; document.querySelector('.auth-logo-text').style.display='block'">
+                <span class="auth-logo-text" style="display:none">Central de Links</span>
+            </div>
+
+            <!-- Tabs -->
+            <div class="auth-tabs">
+                <button class="auth-tab active" id="tabLogin" onclick="switchTab('login')">
+                    <i class="fas fa-sign-in-alt"></i> Entrar
+                </button>
+                <button class="auth-tab" id="tabRegister" onclick="switchTab('register')">
+                    <i class="fas fa-user-plus"></i> Cadastrar
+                </button>
+            </div>
+
+            <!-- Login Form -->
+            <div id="loginPanel" class="auth-panel active">
+                <h2 class="auth-title">Bem-vindo de volta!</h2>
+                <p class="auth-subtitle">Acesse sua conta para continuar</p>
+
+                <form id="loginForm" class="auth-form">
+                    <div class="auth-field">
+                        <label for="loginEmail">
+                            <i class="fas fa-envelope"></i> E-mail
+                        </label>
+                        <input type="email" id="loginEmail" placeholder="seu@email.com" required autocomplete="email">
+                    </div>
+                    <div class="auth-field">
+                        <label for="loginPassword">
+                            <i class="fas fa-lock"></i> Senha
+                        </label>
+                        <div class="input-password-wrapper">
+                            <input type="password" id="loginPassword" placeholder="••••••••" required autocomplete="current-password">
+                            <button type="button" class="toggle-password" onclick="togglePassword('loginPassword', this)">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="auth-forgot">
+                        <button type="button" class="btn-link" onclick="showForgotPassword()">Esqueci minha senha</button>
+                    </div>
+                    <button type="submit" class="btn-auth" id="loginBtn">
+                        <span class="btn-text"><i class="fas fa-sign-in-alt"></i> Entrar</span>
+                        <span class="btn-loader" style="display:none"><i class="fas fa-spinner fa-spin"></i></span>
+                    </button>
+                    <div id="loginError" class="auth-error" style="display:none"></div>
+                </form>
+            </div>
+
+            <!-- Register Form -->
+            <div id="registerPanel" class="auth-panel">
+                <h2 class="auth-title">Criar conta</h2>
+                <p class="auth-subtitle">Registre-se para acessar a central</p>
+
+                <form id="registerForm" class="auth-form">
+                    <div class="auth-field">
+                        <label for="registerName">
+                            <i class="fas fa-user"></i> Nome completo
+                        </label>
+                        <input type="text" id="registerName" placeholder="Seu nome" required autocomplete="name">
+                    </div>
+                    <div class="auth-field">
+                        <label for="registerEmail">
+                            <i class="fas fa-envelope"></i> E-mail
+                        </label>
+                        <input type="email" id="registerEmail" placeholder="seu@email.com" required autocomplete="email">
+                    </div>
+                    <div class="auth-field">
+                        <label for="registerPassword">
+                            <i class="fas fa-lock"></i> Senha
+                        </label>
+                        <div class="input-password-wrapper">
+                            <input type="password" id="registerPassword" placeholder="Mínimo 6 caracteres" required minlength="6" autocomplete="new-password">
+                            <button type="button" class="toggle-password" onclick="togglePassword('registerPassword', this)">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="auth-field">
+                        <label for="registerConfirm">
+                            <i class="fas fa-lock"></i> Confirmar senha
+                        </label>
+                        <div class="input-password-wrapper">
+                            <input type="password" id="registerConfirm" placeholder="Repita a senha" required autocomplete="new-password">
+                            <button type="button" class="toggle-password" onclick="togglePassword('registerConfirm', this)">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-auth" id="registerBtn">
+                        <span class="btn-text"><i class="fas fa-user-plus"></i> Criar conta</span>
+                        <span class="btn-loader" style="display:none"><i class="fas fa-spinner fa-spin"></i></span>
+                    </button>
+                    <div id="registerError" class="auth-error" style="display:none"></div>
+                    <div id="registerSuccess" class="auth-success" style="display:none"></div>
+                </form>
+            </div>
+
+            <!-- Forgot Password -->
+            <div id="forgotPanel" class="auth-panel">
+                <button class="btn-back" onclick="showLoginPanel()">
+                    <i class="fas fa-arrow-left"></i> Voltar
+                </button>
+                <h2 class="auth-title">Recuperar senha</h2>
+                <p class="auth-subtitle">Enviaremos um link para seu e-mail</p>
+
+                <form id="forgotForm" class="auth-form">
+                    <div class="auth-field">
+                        <label for="forgotEmail">
+                            <i class="fas fa-envelope"></i> E-mail
+                        </label>
+                        <input type="email" id="forgotEmail" placeholder="seu@email.com" required>
+                    </div>
+                    <button type="submit" class="btn-auth" id="forgotBtn">
+                        <span class="btn-text"><i class="fas fa-paper-plane"></i> Enviar link</span>
+                        <span class="btn-loader" style="display:none"><i class="fas fa-spinner fa-spin"></i></span>
+                    </button>
+                    <div id="forgotError" class="auth-error" style="display:none"></div>
+                    <div id="forgotSuccess" class="auth-success" style="display:none"></div>
+                </form>
+            </div>
+        </div>
+
+        <p class="auth-footer">
+            Central de Links &copy; 2025 — Acesso restrito a colaboradores
+        </p>
+    </div>
+
+    <script type="module" src="auth.js"></script>
+    <script>
+        function switchTab(tab) {
+            document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.auth-panel').forEach(p => p.classList.remove('active'));
+            document.getElementById('tab' + (tab === 'login' ? 'Login' : 'Register')).classList.add('active');
+            document.getElementById(tab + 'Panel').classList.add('active');
+        }
+
+        function showForgotPassword() {
+            document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.auth-panel').forEach(p => p.classList.remove('active'));
+            document.getElementById('forgotPanel').classList.add('active');
+        }
+
+        function showLoginPanel() {
+            switchTab('login');
+        }
+
+        function togglePassword(inputId, btn) {
+            const input = document.getElementById(inputId);
+            const icon = btn.querySelector('i');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.className = 'fas fa-eye-slash';
+            } else {
+                input.type = 'password';
+                icon.className = 'fas fa-eye';
+            }
+        }
+
+        // Animated particles
+        const container = document.getElementById('particles');
+        for (let i = 0; i < 20; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'particle';
+            dot.style.cssText = `
+                left: ${Math.random() * 100}%;
+                top: ${Math.random() * 100}%;
+                width: ${Math.random() * 4 + 2}px;
+                height: ${Math.random() * 4 + 2}px;
+                animation-delay: ${Math.random() * 4}s;
+                animation-duration: ${Math.random() * 6 + 4}s;
+            `;
+            container.appendChild(dot);
+        }
+    </script>
+</body>
+</html>

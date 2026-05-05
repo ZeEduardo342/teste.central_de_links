@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Central de Links</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/svg" href="Icon.svg">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+
+    <!-- ═══════════════════════════════════════
+         HEADER
+    ════════════════════════════════════════ -->
+    <header class="header">
+        <div class="header-left">
+            <img src="PNG_Logo_CMP.png" class="logo" alt="Logo" onerror="this.style.display='none'">
+        </div>
+
+        <div class="header-center">
+            <!-- Search + Category Filter -->
+            <div class="search-bar-group">
+                <div class="search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="searchInput" placeholder="Buscar links..." class="search-input">
+                </div>
+                <div class="category-filter-wrapper">
+                    <select id="categoryFilter" class="category-filter-select">
+                        <option value="all">Todas as categorias</option>
+                    </select>
+                    <i class="fas fa-chevron-down filter-arrow"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="header-right">
+            <!-- Card size control -->
+            <div class="card-size-control" title="Tamanho dos cards">
+                <button class="size-btn" id="sizeSmall" onclick="app && app.setCardSize('small')" title="Cards pequenos">
+                    <i class="fas fa-th"></i>
+                </button>
+                <button class="size-btn active" id="sizeMedium" onclick="app && app.setCardSize('medium')" title="Cards médios">
+                    <i class="fas fa-th-large"></i>
+                </button>
+                <button class="size-btn" id="sizeLarge" onclick="app && app.setCardSize('large')" title="Cards grandes">
+                    <i class="fas fa-square"></i>
+                </button>
+            </div>
+
+            <!-- Theme toggle -->
+            <button id="themeToggle" class="icon-btn" title="Alternar tema">
+                <i class="fas fa-moon"></i>
+            </button>
+
+            <!-- User menu -->
+            <div class="user-menu" id="userMenu">
+                <button class="user-avatar-btn" id="userAvatarBtn">
+                    <div class="user-avatar" id="userAvatarDisplay">?</div>
+                    <i class="fas fa-chevron-down" style="font-size:0.65rem; color:var(--text-muted)"></i>
+                </button>
+                <div class="user-dropdown" id="userDropdown">
+                    <div class="user-dropdown-header">
+                        <div class="user-avatar lg" id="dropdownAvatar">?</div>
+                        <div>
+                            <div class="user-dropdown-name" id="dropdownName">—</div>
+                            <div class="user-dropdown-email" id="dropdownEmail">—</div>
+                            <div class="user-dropdown-role" id="dropdownRole">Usuário</div>
+                        </div>
+                    </div>
+                    <div class="user-dropdown-divider"></div>
+                    <button class="user-dropdown-item" onclick="app && app.showAddLinkModal('personal')">
+                        <i class="fas fa-plus"></i> Adicionar link pessoal
+                    </button>
+                    <button class="user-dropdown-item" id="adminPanelBtn" style="display:none" onclick="app && app.showAdminPanel()">
+                        <i class="fas fa-shield-alt"></i> Painel de administração
+                    </button>
+                    <div class="user-dropdown-divider"></div>
+                    <button class="user-dropdown-item danger" onclick="app && app.logout()">
+                        <i class="fas fa-sign-out-alt"></i> Sair
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ═══════════════════════════════════════
+         MAIN CONTENT
+    ════════════════════════════════════════ -->
+    <main class="main-content" id="mainContent">
+
+        <!-- Toolbar: section tabs + add button -->
+        <div class="content-toolbar">
+            <div class="view-tabs">
+                <button class="view-tab active" data-view="public" id="tabPublic">
+                    <i class="fas fa-globe"></i> Links Públicos
+                </button>
+                <button class="view-tab" data-view="personal" id="tabPersonal">
+                    <i class="fas fa-user"></i> Meus Links
+                </button>
+                <button class="view-tab" data-view="favorites" id="tabFavorites">
+                    <i class="fas fa-star"></i> Favoritos
+                </button>
+            </div>
+            <div class="toolbar-actions">
+                <button class="btn btn-primary" id="addPublicLinkBtn" style="display:none" onclick="app && app.showAddLinkModal('public')">
+                    <i class="fas fa-plus"></i> Adicionar Link Público
+                </button>
+                <button class="btn btn-outline" id="addPersonalLinkBtn" onclick="app && app.showAddLinkModal('personal')" style="display:none">
+                    <i class="fas fa-plus"></i> Meu Link
+                </button>
+            </div>
+        </div>
+
+        <!-- Favorites strip (shown above all) -->
+        <section id="favoritesSection" class="favorites-section" style="display:none">
+            <div class="section-title"><i class="fas fa-star"></i> Favoritos</div>
+            <div id="favoritesList" class="links-grid"></div>
+        </section>
+
+        <!-- Main links grid -->
+        <section class="links-section">
+            <div id="linksList" class="links-grid" data-size="medium"></div>
+            <div id="emptyState" class="empty-state" style="display:none">
+                <i class="fas fa-link"></i>
+                <h3>Nenhum link encontrado</h3>
+                <p>Adicione links ou ajuste os filtros de busca.</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- ═══════════════════════════════════════
+         MODALS
+    ════════════════════════════════════════ -->
+
+    <!-- Add / Edit Link Modal -->
+    <div id="linkModal" class="modal">
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <h3 id="linkModalTitle">Adicionar Link</h3>
+                <button class="modal-close" data-modal="linkModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="linkForm">
+                    <input type="hidden" id="linkType" value="public">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="linkTitle">Título *</label>
+                            <input type="text" id="linkTitle" required placeholder="Nome do link">
+                        </div>
+                        <div class="form-group">
+                            <label for="linkCategory">Categoria *</label>
+                            <select id="linkCategory" required>
+                                <option value="">Selecionar...</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="linkUrl">URL *</label>
+                        <input type="text" id="linkUrl" required placeholder="https:// ou figma://...">
+                        <small id="urlHint" class="form-hint" style="display:none"></small>
+                    </div>
+                    <div class="form-group">
+                        <label for="linkDescription">Descrição</label>
+                        <textarea id="linkDescription" rows="2" placeholder="Descrição breve..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="linkTags">Tags <small>(separadas por vírgula)</small></label>
+                        <input type="text" id="linkTags" placeholder="design, urgente, interno">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="linkFavorite">
+                                <span class="checkmark"></span>
+                                Marcar como favorito
+                            </label>
+                        </div>
+                        <div class="form-group checkbox-group" id="linkActiveGroup">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="linkActive" checked>
+                                <span class="checkmark"></span>
+                                Link ativo
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-outline" data-modal-close="linkModal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary" id="saveLinkBtn">
+                            <i class="fas fa-save"></i> Salvar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Link Details Modal -->
+    <div id="detailsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="detailsTitle">Detalhes do Link</h3>
+                <button class="modal-close" data-modal="detailsModal">&times;</button>
+            </div>
+            <div class="modal-body" id="detailsBody">
+                <!-- Filled dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Category Modal -->
+    <div id="categoryModal" class="modal">
+        <div class="modal-content modal-sm">
+            <div class="modal-header">
+                <h3>Nova Categoria</h3>
+                <button class="modal-close" data-modal="categoryModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="categoryForm">
+                    <div class="form-group">
+                        <label for="categoryName">Nome da Categoria *</label>
+                        <input type="text" id="categoryName" required placeholder="Ex: Ferramentas">
+                    </div>
+                    <div class="form-group">
+                        <label for="categoryIcon">Ícone Font Awesome</label>
+                        <input type="text" id="categoryIcon" placeholder="fas fa-folder" value="fas fa-folder">
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-outline" data-modal-close="categoryModal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Criar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Panel Modal -->
+    <div id="adminModal" class="modal">
+        <div class="modal-content modal-xl">
+            <div class="modal-header">
+                <h3><i class="fas fa-shield-alt"></i> Painel de Administração</h3>
+                <button class="modal-close" data-modal="adminModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- Admin tabs -->
+                <div class="admin-tabs">
+                    <button class="admin-tab active" data-admin-tab="users">
+                        <i class="fas fa-users"></i> Usuários
+                    </button>
+                    <button class="admin-tab" data-admin-tab="categories">
+                        <i class="fas fa-folder"></i> Categorias
+                    </button>
+                </div>
+
+                <!-- Users panel -->
+                <div id="adminTabUsers" class="admin-panel active">
+                    <div class="admin-stats" id="adminStats">
+                        <div class="stat-card">
+                            <div class="stat-number" id="statTotalUsers">—</div>
+                            <div class="stat-label">Total de usuários</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="statAdmins">—</div>
+                            <div class="stat-label">Administradores</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="statTotalLinks">—</div>
+                            <div class="stat-label">Links públicos</div>
+                        </div>
+                    </div>
+                    <div id="usersTable" class="users-table-wrapper">
+                        <p class="loading-text"><i class="fas fa-spinner fa-spin"></i> Carregando usuários...</p>
+                    </div>
+                </div>
+
+                <!-- Categories panel -->
+                <div id="adminTabCategories" class="admin-panel">
+                    <div class="admin-actions-bar">
+                        <button class="btn btn-primary" onclick="app && app.showCategoryModal()">
+                            <i class="fas fa-plus"></i> Nova Categoria
+                        </button>
+                    </div>
+                    <div id="categoriesAdminList" class="categories-admin-list">
+                        <p class="loading-text"><i class="fas fa-spinner fa-spin"></i> Carregando...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Modal -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-content modal-sm">
+            <div class="modal-header">
+                <h3>Confirmação</h3>
+                <button class="modal-close" data-modal="confirmModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="confirmMessage">Tem certeza?</p>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-outline" data-modal-close="confirmModal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirmActionBtn">Confirmar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Carregando...</p>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>
